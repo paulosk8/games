@@ -3,7 +3,6 @@ const btn = document.createElement("button"); // Creamos el boton de inicio del 
 const output = document.createElement("div"); // Creamos el contenedor de las palabras
 const inWord = document.createElement("input"); // Creamos el input para ingresar la palabra
 const scoreBoard = document.createElement("div"); // Creamos el contenedor del puntaje
-scoreBoard.textContent = "Puntaje: 0"; // Texto del puntaje
 scoreBoard.style.fontSize = "2em"; // Tamaño de la fuente
 scoreBoard.style.color = "#4C048C"; // Color del texto
 scoreBoard.style.backgroundColor = "#FFD700"; // Color de fondo
@@ -18,8 +17,8 @@ console.log(btn);
 // Agregar a la pagina del HTML
 gameArea.appendChild(scoreBoard);
 gameArea.appendChild(output);
-gameArea.appendChild(btn);
 gameArea.appendChild(inWord);
+gameArea.appendChild(btn);
 
 // Elementos ocultos
 inWord.style.display = "none";
@@ -32,22 +31,39 @@ const game = {
   scramble: "",
   correct: 0,
   incorrect: 0,
+  wordsLeft: 0,
+  played: myWords.length,
 };
+
 // evento click del boton
 btn.addEventListener("click", function (e) {
-  btn.style.display = "none"; // Ocultamos el boton
-  inWord.style.display = "inline"; // Mostramos el input
-  scoreBoard.style.display = "block"; // Mostramos el puntaje
-  myWords.sort(() => {
-    return 0.5 - Math.random();
-  }); // Ordenamos las palabras de forma aleatoria
-  game.sel = myWords[0]; // Seleccionamos la primera palabra
-  game.scramble = sorter(game.sel); // Llamamos a la funcion sorter
-  output.style.fontSize = "3em"; // Tamaño de la fuente
-  inWord.setAttribute("maxlength", game.sel.length); // Maximo de caracteres del input
-  inWord.focus(); // Enfocamos el input
-  output.textContent = game.scramble; // Mostramos la palabra ordenada
-  console.log(game.sel, game.scramble);
+  if (myWords.length === 0) {
+    gameArea.innerHTML = `<h2>Fin del juego</h2>`;
+    gameArea.innerHTML = `Correctas: <b>${game.correct}</b> VS incorrectas: <b>${game.incorrect}</b> <small>de ${game.played} palabras jugadas</small>`;
+
+    inWord.disabled = true;
+    btn.style.display = "none";
+    inWord.style.display = "none";
+    scoreBoard.style.display = "none";
+  } else {
+    inWord.disabled = false; // Habilitamos el input
+    btn.style.display = "none"; // Ocultamos el boton
+    inWord.style.display = "inline"; // Mostramos el input
+    scoreBoard.style.display = "block"; // Mostramos el puntaje
+    myWords.sort(() => {
+      return 0.5 - Math.random();
+    }); // Ordenamos las palabras de forma aleatoria
+    game.sel = myWords.shift(); // Seleccionamos la primera palabra
+    game.wordsLeft = myWords.length; // Cantidad de palabras restantes
+    game.scramble = sorter(game.sel); // Llamamos a la funcion sorter
+    addScore(); // Llamamos a la funcion addScore
+    output.style.fontSize = "3em"; // Tamaño de la fuente
+    inWord.setAttribute("maxlength", game.sel.length); // Maximo de caracteres del input
+    console.log(game);
+    inWord.focus(); // Enfocamos el input
+    output.textContent = game.scramble; // Mostramos la palabra ordenada
+    console.log(game.sel, game.scramble);
+  }
 });
 
 inWord.addEventListener("keypress", (e) => {
@@ -61,11 +77,11 @@ inWord.addEventListener("keypress", (e) => {
 });
 
 function addScore() {
-  let tempOutput = `Correctas: <b>${game.correct}</b> VS incorrectas: <b>${game.incorrect}</b>`;
+  let tempOutput = `Correctas: <b>${game.correct}</b> VS incorrectas: <b>${game.incorrect}</b> <small>Palabras restantes: ${game.wordsLeft}</small>`;
   scoreBoard.innerHTML = tempOutput;
 }
 
-function winChecker(params) {
+function winChecker() {
   inWord.style.borderWidth = "5px";
   if (inWord.value === game.sel) {
     console.log("Ganaste");
