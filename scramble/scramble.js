@@ -31,9 +31,33 @@ btn.addEventListener("click", function (e) {
   game.scramble = sorter(game.sel); // Llamamos a la funcion sorter
   output.style.fontSize = "3em"; // Tamaño de la fuente
   inWord.setAttribute("maxlength", game.sel.length); // Maximo de caracteres del input
+  inWord.focus(); // Enfocamos el input
   output.textContent = game.scramble; // Mostramos la palabra ordenada
   console.log(game.sel, game.scramble);
 });
+
+inWord.addEventListener("keypress", (e) => {
+  console.log(e);
+  inWord.style.borderColor = "#4C048C";
+  inWord.style.borderWidth = "1px";
+  if (inWord.value.length === game.sel.length || e.code === "Enter") {
+    console.log("verificando....");
+    winChecker();
+  }
+});
+
+function winChecker(params) {
+  inWord.style.borderWidth = "5px";
+  if (inWord.value === game.sel) {
+    console.log("Ganaste");
+    inWord.style.borderColor = "green";
+  } else {
+    inWord.style.borderColor = "red";
+    console.log("Perdiste");
+    inWord.value = "";
+    inWord.focus();
+  }
+}
 
 function sorter(word) {
   let temp = word.split(""); // Separamos la palabra en letras
