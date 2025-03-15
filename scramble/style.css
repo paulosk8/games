@@ -1,0 +1,10 @@
+.myInput {
+    font-size: 2em;
+    border: 1px solid #ddd;
+    letter-spacing: 0.5em;
+}
+
+.gameArea {
+    text-align: center;
+    margin: auto;
+}

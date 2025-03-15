@@ -1,6 +1,11 @@
 const gameArea = document.querySelector(".gameArea"); // Creamos el contenedor del area del juego
 const btn = document.createElement("button"); // Creamos el boton de inicio del juego
 const output = document.createElement("div"); // Creamos el contenedor de las palabras
+const inWord = document.createElement("input"); // Creamos el input para ingresar la palabra
+inWord.setAttribute("type", "text"); // Tipo de input
+inWord.classList.add("myInput"); // Clase de bootstrap
+output.style.textAlign = "center"; // Alineamos el texto al centro
+output.style.marginBottom = "10px"; // Margen inferior
 btn.textContent = "Iniciar Juego"; // Texto del boton
 output.textContent = "Clic en el boton"; // Texto del contenedor de las palabras
 console.log(btn);
@@ -8,21 +13,25 @@ console.log(btn);
 // Agregar a la pagina del HTML
 gameArea.appendChild(output);
 gameArea.appendChild(btn);
+gameArea.appendChild(inWord);
 
 // Valores iniciales del juego
-const myWords = ["perro", "gato", "raton"];
+const myWords = ["cocodrilo", "gato", "raton"];
 const game = {
   sel: "",
   scramble: "",
 };
 // evento click del boton
 btn.addEventListener("click", function (e) {
+  btn.style.display = "none"; // Ocultamos el boton
   myWords.sort(() => {
     return 0.5 - Math.random();
   }); // Ordenamos las palabras de forma aleatoria
   game.sel = myWords[0]; // Seleccionamos la primera palabra
   game.scramble = sorter(game.sel); // Llamamos a la funcion sorter
-  output.textContent = `${game.sel} es la palabra seleccionada`; // Mostramos la palabra en el contenedor
+  output.style.fontSize = "3em"; // Tamaño de la fuente
+  inWord.setAttribute("maxlength", game.sel.length); // Maximo de caracteres del input
+  output.textContent = game.scramble; // Mostramos la palabra ordenada
   console.log(game.sel, game.scramble);
 });
 
